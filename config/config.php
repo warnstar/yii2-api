@@ -7,13 +7,30 @@ $config = [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'aliases' => [
-        '@bower' => '@vendor/bower-asset',
-        '@npm'   => '@vendor/npm-asset',
+
     ],
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'cKZjdbiFueeMxA0b7KDCeZ1iSRujzp63',
+
+            'parsers' => [
+                'application/json' => 'yii\web\JsonParser',
+            ],
+        ],
+        'response' => [
+            'class' => 'yii\web\Response',
+            'on beforeSend' => function ($event) {
+                $response = $event->sender;
+                $response->data = [
+                    'success' => $response->isSuccessful,
+                    'code' => $response->getStatusCode(),
+                    'message' => $response->statusText,
+                    'data' => $response->data,
+                ];
+                $response->statusCode = 200;
+
+            }
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -25,12 +42,7 @@ $config = [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        'mailer' => [
-            'class' => \yii\symfonymailer\Mailer::class,
-            'viewPath' => '@app/mail',
-            // send all mails to a file by default.
-            'useFileTransport' => true,
-        ],
+
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [
@@ -43,8 +55,8 @@ $config = [
         'db' => [
             'class' => 'yii\db\Connection',
             'dsn' => 'mysql:host=localhost;dbname=yii2basic',
-            'username' => 'root',
-            'password' => '',
+            'username' => "root",
+            'password' => "123111",
             'charset' => 'utf8',
 
             // Schema cache options (for production environment)
@@ -52,14 +64,17 @@ $config = [
             //'schemaCacheDuration' => 60,
             //'schemaCache' => 'cache',
         ],
-        /*
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
+            'enableStrictParsing' => false,
+
             'rules' => [
+                'suffix' => '.json',
             ],
+
         ],
-        */
+
     ],
     'params' => $params,
 ];
@@ -80,5 +95,10 @@ if (YII_ENV_DEV) {
         //'allowedIPs' => ['127.0.0.1', '::1'],
     ];
 }
+
+$config = yii\helpers\ArrayHelper::merge(
+    $config,
+    require __DIR__ . '/config-local.php'
+);
 
 return $config;

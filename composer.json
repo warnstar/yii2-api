@@ -1,11 +1,10 @@
 {
-    "name": "yiisoft/yii2-app-basic",
-
-
+    "name": "warnstar/yii2-api",
     "minimum-stability": "stable",
     "require": {
-        "php": ">=7.4.0",
-        "yiisoft/yii2": "~2.0.48"
+        "php": ">=8.0.0",
+        "yiisoft/yii2": "~2.0.48",
+        "symfony/var-dumper": "^6.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",
@@ -42,7 +41,7 @@
         },
         "yii\\composer\\Installer::postInstall": {
             "generateCookieValidationKey": [
-                "config/web.php"
+                "config/config.php"
             ]
         }
     },

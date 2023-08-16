@@ -1,6 +1,10 @@
 # phpstorm project files
 .idea
 
+# config
+config/config-local.php
+
+.env
 # netbeans project files
 nbproject
 
